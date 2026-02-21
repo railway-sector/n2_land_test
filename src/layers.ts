@@ -47,6 +47,7 @@ import {
   nloStatusField,
   nloLoStatusField,
   occupancyField,
+  latest_date_field,
 } from "./uniqueValues";
 
 /* Standalone table for Dates */
@@ -369,7 +370,7 @@ const lotIdLabel = new LabelClass({
 });
 
 /* uniqueRenderer */
-const lotDefaultSymbol = new SimpleFillSymbol({
+export const lotDefaultSymbol = new SimpleFillSymbol({
   color: [0, 0, 0, 0],
   style: "solid",
   outline: {
@@ -379,7 +380,7 @@ const lotDefaultSymbol = new SimpleFillSymbol({
   },
 });
 
-const lotLayerRendererUniqueValueInfos = statusLotLabel.map(
+export const lotLayerRendererUniqueValueInfos = statusLotLabel.map(
   (status: any, index: any) => {
     return Object.assign({
       value: index + 1,
@@ -391,8 +392,8 @@ const lotLayerRendererUniqueValueInfos = statusLotLabel.map(
   },
 );
 
-const lotLayerRenderer = new UniqueValueRenderer({
-  field: lotStatusField,
+export const lotLayerRenderer = new UniqueValueRenderer({
+  field: latest_date_field,
   defaultSymbol: lotDefaultSymbol, // autocasts as new SimpleFillSymbol()
   uniqueValueInfos: lotLayerRendererUniqueValueInfos,
 });
@@ -457,12 +458,11 @@ const templateLot = new PopupTemplate({
 
 export const lotLayer = new FeatureLayer({
   portalItem: {
-    id: "23500954a8d84a46886e76e6e0883a69",
+    id: "4bef30bdbe5d4a8ebf5c2e9612f484e8",
     portal: {
       url: "https://gis.railway-sector.com/portal",
     },
   },
-  layerId: 4,
   labelingInfo: [lotIdLabel],
   renderer: lotLayerRenderer,
   popupTemplate: templateLot,
@@ -1192,7 +1192,7 @@ export const lotGroupLayer = new GroupLayer({
   layers: [
     endorsedLotLayer,
     lotLayer,
-    pnrLayer,
+    // pnrLayer,
     accessibleLotAreaLayer,
     handedOverLotLayer,
   ],

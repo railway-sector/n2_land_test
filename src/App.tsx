@@ -16,6 +16,7 @@ import Header from "./components/Header";
 import MainChart from "./components/MainChart";
 import ActionPanel from "./components/ActionPanel";
 import { MyContext } from "./contexts/MyContext";
+import { latest_date_field, superurgent_items } from "./uniqueValues";
 
 function App() {
   const [loggedInState, setLoggedInState] = useState<boolean>(false);
@@ -51,6 +52,13 @@ function App() {
 
   const [municipals, setMunicipals] = useState<any>();
   const [barangays, setBarangays] = useState<any>();
+  const [statusdatefield, setStatusdatefield] =
+    useState<any>(latest_date_field);
+  const [superurgenttype, setSuperurgenttype] = useState<any>(
+    superurgent_items[0],
+  );
+  const [datefields, setDatefields] = useState<any>();
+  const [timesliderstate, setTimesliderstate] = useState<boolean>(false);
 
   const updateMunicipals = (newMunicipal: any) => {
     setMunicipals(newMunicipal);
@@ -58,6 +66,22 @@ function App() {
 
   const updateBarangays = (newBarangay: any) => {
     setBarangays(newBarangay);
+  };
+
+  const updateStatusdatefield = (newStatusfield: any) => {
+    setStatusdatefield(newStatusfield);
+  };
+
+  const updateSuperurgenttype = (newSuperurgenttype: any) => {
+    setSuperurgenttype(newSuperurgenttype);
+  };
+
+  const updateDatefields = (newDateFields: any) => {
+    setDatefields(newDateFields);
+  };
+
+  const updateTimesliderstate = (newState: any) => {
+    setTimesliderstate(newState);
   };
 
   return (
@@ -71,8 +95,16 @@ function App() {
               value={{
                 municipals,
                 barangays,
+                statusdatefield,
+                superurgenttype,
+                datefields,
+                timesliderstate,
                 updateMunicipals,
                 updateBarangays,
+                updateStatusdatefield,
+                updateSuperurgenttype,
+                updateDatefields,
+                updateTimesliderstate,
               }}
             >
               <ActionPanel />

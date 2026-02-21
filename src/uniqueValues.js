@@ -1,6 +1,16 @@
 import Collection from "@arcgis/core/core/Collection";
 import ActionButton from "@arcgis/core/support/actions/ActionButton";
 
+// Status_Date Query
+export const date_fields = [
+  "x202509",
+  "x202510",
+  "x202511",
+  "x202512",
+  "x202601",
+];
+export const latest_date_field = date_fields[date_fields.length - 1];
+
 // Chart width
 export const chart_width = "26vw";
 

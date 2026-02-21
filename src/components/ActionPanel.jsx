@@ -9,27 +9,31 @@ import {
   CalciteAction,
   CalcitePanel,
 } from "@esri/calcite-components-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import "@arcgis/map-components/components/arcgis-basemap-gallery";
 import "@arcgis/map-components/components/arcgis-layer-list";
 import "@arcgis/map-components/components/arcgis-legend";
 import "@arcgis/map-components/components/arcgis-direct-line-measurement-3d";
-import { defineActions } from "../uniqueValues";
+import { defineActions, latest_date_field } from "../uniqueValues";
 import {
   ngcp_tagged_structureLayer,
   ngcp_working_area,
   prowOthersLayer,
 } from "../layers";
 import HandedOverAreaChart from "./HandedOverAreaChart";
-import LotProgressChart from "./LotProgressChart";
+import { MyContext } from "../contexts/MyContext";
+import Timeslider from "./Timeslider";
+import { updateLotSymbology } from "../Query";
 
 function ActionPanel() {
+  const { updateStatusdatefield, updateTimesliderstate } = use(MyContext);
   const [activeWidget, setActiveWidget] = useState(null);
   const [nextWidget, setNextWidget] = useState(null);
   const arcgisScene = document.querySelector("arcgis-scene");
   const directLineMeasure = document.querySelector(
     "arcgis-direct-line-measurement-3d",
   );
+  const timeSlider = document.querySelector("arcgis-time-slider");
 
   useEffect(() => {
     if (activeWidget) {
@@ -40,6 +44,13 @@ function ActionPanel() {
       directLineMeasure
         ? directLineMeasure.clear()
         : console.log("Line measure is cleared");
+
+      if (timeSlider) {
+        timeSlider.timeExtent = null;
+        updateStatusdatefield(latest_date_field);
+        updateLotSymbology(latest_date_field);
+        updateTimesliderstate(false);
+      }
     }
 
     if (nextWidget !== activeWidget) {
@@ -92,7 +103,7 @@ function ActionPanel() {
             }}
           ></CalciteAction>
 
-          <CalciteAction
+          {/*<CalciteAction
             data-action-id="charts"
             icon="graph-time-series"
             text="Progress Chart"
@@ -101,7 +112,7 @@ function ActionPanel() {
               setNextWidget(event.target.id);
               setActiveWidget(nextWidget === activeWidget ? null : nextWidget);
             }}
-          ></CalciteAction>
+          ></CalciteAction>*/}
 
           <CalciteAction
             data-action-id="handedover-charts"
@@ -119,6 +130,17 @@ function ActionPanel() {
             icon="measure-line"
             text="Line Measurement"
             id="directline-measure"
+            onClick={(event) => {
+              setNextWidget(event.target.id);
+              setActiveWidget(nextWidget === activeWidget ? null : nextWidget);
+            }}
+          ></CalciteAction>
+
+          <CalciteAction
+            data-action-id="timeslider"
+            icon="sliders-horizontal"
+            text="Land Status Change"
+            id="timeslider"
             onClick={(event) => {
               setNextWidget(event.target.id);
               setActiveWidget(nextWidget === activeWidget ? null : nextWidget);
@@ -193,13 +215,6 @@ function ActionPanel() {
         </CalcitePanel>
 
         <CalcitePanel
-          class="timeSeries-panel"
-          height="l"
-          data-panel-id="charts"
-          hidden
-        ></CalcitePanel>
-
-        <CalcitePanel
           class="handedOverArea-panel"
           height="l"
           data-panel-id="handedover-charts"
@@ -220,6 +235,13 @@ function ActionPanel() {
             // onarcgisPropertyChange={(event) => console.log(event.target.id)}
           ></arcgis-direct-line-measurement-3d>
         </CalcitePanel>
+
+        <CalcitePanel
+          class="timeslider"
+          height="l"
+          data-panel-id="timeslider"
+          hidden
+        ></CalcitePanel>
 
         <CalcitePanel heading="Description" data-panel-id="information" hidden>
           {nextWidget === "information" ? (
@@ -244,12 +266,12 @@ function ActionPanel() {
         </CalcitePanel>
       </CalciteShellPanel>
 
-      {nextWidget === "charts" && nextWidget !== activeWidget && (
-        <LotProgressChart />
-      )}
-
       {nextWidget === "handedover-charts" && nextWidget !== activeWidget && (
         <HandedOverAreaChart />
+      )}
+
+      {nextWidget === "timeslider" && nextWidget !== activeWidget && (
+        <Timeslider />
       )}
     </>
   );

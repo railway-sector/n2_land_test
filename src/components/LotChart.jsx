@@ -17,6 +17,7 @@ import {
   highlightLot,
   highlightRemove,
   polygonViewQueryFeatureHighlight,
+  queryLayersExpression,
   thousands_separators,
   zoomToLayer,
 } from "../Query";
@@ -39,6 +40,7 @@ import {
   querySuperUrgent,
   statusLotLabel,
   statusLotQuery,
+  superurgent_items,
   updatedDateCategoryNames,
   valueLabelColor,
 } from "../uniqueValues";
@@ -60,10 +62,14 @@ function maybeDisposeRoot(divId) {
 /// Draw chart
 const LotChart = () => {
   const arcgisScene = document.querySelector("arcgis-scene");
-  const { municipals, barangays } = use(MyContext);
-
-  const municipal = municipals;
-  const barangay = barangays;
+  const {
+    municipals,
+    barangays,
+    statusdatefield,
+    superurgenttype,
+    updateSuperurgenttype,
+    timesliderstate,
+  } = use(MyContext);
 
   // 0. Updated date
   const [asOfDate, setAsOfDate] = useState(null);
@@ -76,9 +82,9 @@ const LotChart = () => {
   }, []);
 
   // Add zoomToLayer in App component, not LotChart component
-  useEffect(() => {
-    zoomToLayer(lotLayer, arcgisScene);
-  }, [municipal, barangay]);
+  // useEffect(() => {
+  //   zoomToLayer(lotLayer, arcgisScene);
+  // }, [municipals, barangays]);
 
   // 1. Land Acquisition
   const pieSeriesRef = useRef({});
@@ -93,59 +99,18 @@ const LotChart = () => {
   const [affectAreaPie, setAffectAreaPie] = useState([]);
   const [totalAffectedArea, setTotalAffectedArea] = useState();
 
-  // Super urgent control items
-  const superurgent_items = ["OFF", "ON"];
-  const [superUrgentSelected, setSuperUrgentSelected] = useState(
-    superurgent_items[0],
-  );
-
   // Handed Over // //testestest
   const [handedOverNumber, setHandedOverNumber] = useState([]);
   const [handedOverArea, setHandedOverArea] = useState();
   const [handedOverCheckBox, setHandedOverCheckBox] = useState(false);
 
-  // Query
-  const queryMunicipality = `${municipalityField} = '` + municipal + "'";
-  const querySuperUrgentMunicipality =
-    querySuperUrgent + " AND " + queryMunicipality;
-  const queryBarangay = `${barangayField} = '` + barangay + "'";
-  const queryMunicipalBarangay = queryMunicipality + " AND " + queryBarangay;
-  const querySuperUrgentMunicipalBarangay =
-    querySuperUrgentMunicipality + " AND " + queryBarangay;
-
   useEffect(() => {
-    if (superUrgentSelected === superurgent_items[0]) {
-      if (!municipal) {
-        lotLayer.definitionExpression = "1=1";
-        handedOverLotLayer.definitionExpression = "1=1";
-      } else if (municipal && !barangay) {
-        lotLayer.definitionExpression = queryMunicipality;
-        handedOverLotLayer.definitionExpression = queryMunicipality;
-      } else if (municipal && barangay) {
-        lotLayer.definitionExpression = queryMunicipalBarangay;
-        handedOverLotLayer.definitionExpression = queryMunicipalBarangay;
-      }
-    } else if (superUrgentSelected === superurgent_items[1]) {
-      if (!municipal) {
-        lotLayer.definitionExpression = querySuperUrgent;
-        handedOverLotLayer.definitionExpression = querySuperUrgent;
-      } else if (municipal && !barangay) {
-        lotLayer.definitionExpression = querySuperUrgentMunicipality;
-        handedOverLotLayer.definitionExpression = querySuperUrgentMunicipality;
-      } else if (municipal && barangay) {
-        lotLayer.definitionExpression = querySuperUrgentMunicipalBarangay;
-        handedOverLotLayer.definitionExpression =
-          querySuperUrgentMunicipalBarangay;
-      }
-    }
-
-    if (superUrgentSelected === superurgent_items[1]) {
-      zoomToLayer(lotLayer, arcgisScene);
+    if (superurgenttype === superurgent_items[1]) {
       highlightLot(lotLayer, arcgisScene);
     } else {
       highlightRemove(lotLayer);
     }
-  }, [superUrgentSelected]);
+  }, [superurgenttype]);
 
   useEffect(() => {
     if (handedOverCheckBox === true) {
@@ -156,37 +121,65 @@ const LotChart = () => {
   }, [handedOverCheckBox]);
 
   useEffect(() => {
-    // lotLayer.definitionExpression = "Status_Date = date '2026-02-13'";
-    generateLotData(superUrgentSelected, municipal, barangay).then((result) => {
+    queryLayersExpression(
+      superurgenttype,
+      municipals,
+      barangays,
+      arcgisScene,
+      timesliderstate,
+    );
+    generateLotData(
+      superurgenttype,
+      municipals,
+      barangays,
+      statusdatefield,
+    ).then((result) => {
       setLotData(result);
     });
 
     // Lot number
-    generateLotNumber().then((response) => {
+    generateLotNumber(
+      superurgenttype,
+      municipals,
+      barangays,
+      statusdatefield,
+    ).then((response) => {
       setLotNumber(response);
     });
 
     // total affected areas for pie chart
-    generateAffectedAreaForPie(municipal, barangay).then((response) => {
+    generateAffectedAreaForPie(
+      superurgenttype,
+      municipals,
+      barangays,
+      statusdatefield,
+    ).then((response) => {
       setAffectAreaPie(response);
     });
 
     // total affected area for
-    generateTotalAffectedArea(municipal, barangay).then((response) => {
+    generateTotalAffectedArea(
+      superurgenttype,
+      municipals,
+      barangays,
+      statusdatefield,
+    ).then((response) => {
       setTotalAffectedArea(response);
     });
 
     // Handed Over
-    generateHandedOverLotsNumber(superUrgentSelected, municipal, barangay).then(
+    generateHandedOverLotsNumber(superurgenttype, municipals, barangays).then(
       (response) => {
         setHandedOverNumber(response);
       },
     );
 
-    generateHandedOverArea(municipal, barangay).then((response) => {
-      setHandedOverArea(response);
-    });
-  }, [superUrgentSelected, municipal, barangay]);
+    generateHandedOverArea(superurgenttype, municipals, barangays).then(
+      (response) => {
+        setHandedOverArea(response);
+      },
+    );
+  }, [superurgenttype, municipals, barangays, statusdatefield]);
 
   // useLayoutEffect runs synchronously. If this is used with React.lazy,
   // Every time calcite action is fired, the chart is fired, too.
@@ -551,16 +544,14 @@ const LotChart = () => {
             marginBottom: "auto",
           }}
           onCalciteSegmentedControlChange={(event) =>
-            setSuperUrgentSelected(event.target.selectedItem.id)
+            updateSuperurgenttype(event.target.selectedItem.id)
           }
         >
-          {superUrgentSelected &&
+          {superurgenttype &&
             superurgent_items.map((priority, index) => {
               return (
                 <CalciteSegmentedControlItem
-                  {...(superUrgentSelected === priority
-                    ? { checked: true }
-                    : {})}
+                  {...(superurgenttype === priority ? { checked: true } : {})}
                   key={index}
                   value={priority}
                   id={priority}

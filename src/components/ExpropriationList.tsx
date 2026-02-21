@@ -18,18 +18,13 @@ import {
   CalciteChip,
   CalciteAvatar,
 } from "@esri/calcite-components-react";
-import {
-  barangayField,
-  chart_width,
-  lotStatusField,
-  municipalityField,
-  statusLotNumber,
-} from "../uniqueValues";
+import { chart_width, lotStatusField, statusLotNumber } from "../uniqueValues";
 import { ArcgisScene } from "@arcgis/map-components/dist/components/arcgis-scene";
 
 import "../index.css";
 import "../App.css";
 import { MyContext } from "../contexts/MyContext";
+import { queryStatisticsLayer } from "../Query";
 
 // Zoom in to selected lot from expropriation list
 let highlightSelect: any;
@@ -61,32 +56,23 @@ function resultClickHandler(event: any) {
 const ExpropriationList = () => {
   const { municipals, barangays } = use(MyContext);
 
-  const municipal = municipals;
-  const barangay = barangays;
-
   // Obtain Status number for 'For Expropriation'
   const find = statusLotNumber.filter((e) =>
     e.category.includes("Expropriation"),
   );
   const statusExproValue = find[0]?.value;
-
   const [exproItem, setExproItem] = useState<undefined | any>([]);
-  const queryMunicipality = `${municipalityField} = '` + municipal + "'";
-  const queryBarangay = `${barangayField} = '` + barangay + "'";
-  const queryMunicipalBarangay = queryMunicipality + " AND " + queryBarangay;
-  // const queryExpro = `${lotStatusField} = 7`;
-  const queryExpro = `${lotStatusField} = ${statusExproValue}`;
 
   useEffect(() => {
+    const queryExpro = `${lotStatusField} = ${statusExproValue}`;
     const query = lotLayer.createQuery();
+    query.where = queryStatisticsLayer(
+      undefined,
+      municipals,
+      barangays,
+      queryExpro,
+    );
     query.outFields = ["*"];
-    if (!municipal) {
-      query.where = queryExpro;
-    } else if (municipal && !barangay) {
-      query.where = queryMunicipality + " AND " + queryExpro;
-    } else if (barangay) {
-      query.where = queryMunicipalBarangay + " AND " + queryExpro;
-    }
 
     query.returnGeometry = true;
     lotLayer.queryFeatures(query).then((result: any) => {
@@ -113,7 +99,7 @@ const ExpropriationList = () => {
         ]);
       });
     });
-  }, [municipal, barangay]);
+  }, [municipals, barangays]);
 
   return (
     <>

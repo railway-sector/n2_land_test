@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { useRef, useState, useEffect, memo, use } from "react";
-import { nloLayer, occupancyLayer } from "../layers";
+import { nloLayer } from "../layers";
 import FeatureFilter from "@arcgis/core/layers/support/FeatureFilter";
 import Query from "@arcgis/core/rest/support/Query";
 import * as am5 from "@amcharts/amcharts5";
@@ -11,13 +11,12 @@ import {
   dateUpdate,
   generateNloData,
   generateNloNumber,
+  queryLayersExpression,
   thousands_separators,
 } from "../Query";
 import {
-  barangayField,
   chart_width,
   cutoff_days,
-  municipalityField,
   nloStatusField,
   primaryLabelColor,
   statusNloQuery,
@@ -39,10 +38,7 @@ function maybeDisposeRoot(divId: any) {
 /// Draw chart
 const NloChart = memo(() => {
   const arcgisScene = document.querySelector("arcgis-scene") as ArcgisScene;
-  const { municipals, barangays } = use(MyContext);
-
-  const municipal = municipals;
-  const barangay = barangays;
+  const { municipals, barangays, timesliderstate } = use(MyContext);
 
   // 0. Updated date
   const [asOfDate, setAsOfDate] = useState<undefined | any | unknown>(null);
@@ -71,29 +67,24 @@ const NloChart = memo(() => {
   const [nloNumber, setNloNumber] = useState(0);
   const chartID = "nlo-chart";
 
-  // Query
-  const queryMunicipality = `${municipalityField} = '` + municipal + "'";
-  const queryBarangay = `${barangayField} = '` + barangay + "'";
-  const queryMunicipalBarangay = queryMunicipality + " AND " + queryBarangay;
-
   useEffect(() => {
-    if (municipal && !barangay) {
-      nloLayer.definitionExpression = queryMunicipality;
-      occupancyLayer.definitionExpression = queryMunicipality;
-    } else if (barangay) {
-      nloLayer.definitionExpression = queryMunicipalBarangay;
-      occupancyLayer.definitionExpression = queryMunicipalBarangay;
-    }
+    queryLayersExpression(
+      undefined,
+      municipals,
+      barangays,
+      arcgisScene,
+      timesliderstate,
+    );
 
-    generateNloData(municipal, barangay).then((result: any) => {
+    generateNloData(municipals, barangays).then((result: any) => {
       SetNloData(result);
     });
 
     // NLO
-    generateNloNumber().then((response: any) => {
+    generateNloNumber(municipals, barangays).then((response: any) => {
       setNloNumber(response);
     });
-  }, [municipal, barangay]);
+  }, [municipals, barangays]);
 
   useEffect(() => {
     // Dispose previously created root element

@@ -10,6 +10,7 @@ import {
   dateUpdate,
   generateStrucNumber,
   generateStructureData,
+  queryLayersExpression,
   thousands_separators,
 } from "../Query";
 import "../index.css";
@@ -17,10 +18,8 @@ import "../App.css";
 import "@esri/calcite-components/dist/components/calcite-label";
 
 import {
-  barangayField,
   chart_width,
   cutoff_days,
-  municipalityField,
   primaryLabelColor,
   statusStructureQuery,
   structureStatusField,
@@ -44,10 +43,7 @@ function maybeDisposeRoot(divId: any) {
 /// Draw chart
 const StructureChart = () => {
   const arcgisScene = document.querySelector("arcgis-scene") as ArcgisScene;
-  const { municipals, barangays } = use(MyContext);
-
-  const municipal = municipals;
-  const barangay = barangays;
+  const { municipals, barangays, timesliderstate } = use(MyContext);
 
   // 0. Updated date
   const [asOfDate, setAsOfDate] = useState<undefined | any | unknown>(null);
@@ -76,31 +72,24 @@ const StructureChart = () => {
   const chartID = "structure-chart";
   const [structureNumber, setStructureNumber] = useState([]);
 
-  // Query
-  const queryMunicipality = `${municipalityField} = '` + municipal + "'";
-  const queryBarangay = `${barangayField} = '` + barangay + "'";
-  const queryMunicipalBarangay = queryMunicipality + " AND " + queryBarangay;
-
   useEffect(() => {
-    if (municipal && !barangay) {
-      structureLayer.definitionExpression = queryMunicipality;
-    } else if (municipal && barangay) {
-      structureLayer.definitionExpression = queryMunicipalBarangay;
-    }
+    queryLayersExpression(
+      undefined,
+      municipals,
+      barangays,
+      arcgisScene,
+      timesliderstate,
+    );
 
-    generateStructureData(municipal, barangay).then((result: any) => {
+    generateStructureData(municipals, barangays).then((result: any) => {
       setStructureData(result);
     });
 
     // Structure Number
-    generateStrucNumber().then((response: any) => {
+    generateStrucNumber(municipals, barangays).then((response: any) => {
       setStructureNumber(response);
     });
-
-    // generateStrucMoaData(municipal, barangay).then((response: any) => {
-    //   setStructureMoaData(response);
-    // });
-  }, [municipal, barangay]);
+  }, [municipals, barangays]);
 
   useEffect(() => {
     // Dispose previously created root element

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import "../index.css";
 import "../App.css";
 import "@arcgis/map-components/dist/components/arcgis-scene";
@@ -23,57 +23,69 @@ import {
   lotLayer,
 } from "../layers";
 import "@esri/calcite-components/dist/components/calcite-button";
+import { MyContext } from "../contexts/MyContext";
 
 function MapDisplay() {
+  const { updateDatefields } = use(MyContext);
   const [sceneView, setSceneView] = useState();
   const arcgisScene = document.querySelector("arcgis-scene");
   const arcgisSearch = document.querySelector("arcgis-search");
 
   useEffect(() => {
-    if (sceneView) {
-      arcgisScene.map.add(pierAccessLayer);
-      arcgisScene.map.add(lotGroupLayer);
-      arcgisScene.map.add(ngcp2_groupLayer);
-      arcgisScene.map.add(structureLayer);
-      arcgisScene.map.add(nloLoOccupancyGroupLayer);
-      arcgisScene.map.add(alignmentGroupLayer);
-      arcgisScene.map.add(stationLayer);
+    // Extract status date fields for time slider
+    lotLayer.when(() => {
+      const dateFields = [];
+      lotLayer?.fields.map((field) => {
+        dateFields.push(field.name);
+      });
 
-      arcgisSearch.sources = [
-        {
-          layer: lotLayer,
-          searchFields: ["LotID"],
-          displayField: "LotID",
-          exactMatch: false,
-          outFields: ["LotID"],
-          name: "Lot ID",
-          placeholder: "example: 10083",
-        },
-        {
-          layer: structureLayer,
-          searchFields: ["StrucID"],
-          displayField: "StrucID",
-          exactMatch: false,
-          outFields: ["StrucID"],
-          name: "Structure ID",
-          placeholder: "example: NSRP-01-02-ML007",
-        },
-        {
-          layer: pierAccessLayer,
-          searchFields: ["PierNumber"],
-          displayField: "PierNumber",
-          exactMatch: false,
-          outFields: ["PierNumber"],
-          name: "Pier No",
-          zoomScale: 1000,
-          placeholder: "example: P-288",
-        },
-      ];
-      arcgisSearch.allPlaceholder = "LotID, StructureID, Chainage";
-      arcgisSearch.includeDefaultSourcesDisabled = true;
-      arcgisSearch.locationDisabled = true;
-      arcgisScene.view.ui.components = [];
-    }
+      updateDatefields(dateFields.filter((date) => date.startsWith("x")));
+    });
+  }, []);
+
+  arcgisScene?.viewOnReady(() => {
+    arcgisScene.map.add(pierAccessLayer);
+    arcgisScene.map.add(lotGroupLayer);
+    arcgisScene.map.add(ngcp2_groupLayer);
+    arcgisScene.map.add(structureLayer);
+    arcgisScene.map.add(nloLoOccupancyGroupLayer);
+    arcgisScene.map.add(alignmentGroupLayer);
+    arcgisScene.map.add(stationLayer);
+
+    arcgisSearch.sources = [
+      {
+        layer: lotLayer,
+        searchFields: ["LotID"],
+        displayField: "LotID",
+        exactMatch: false,
+        outFields: ["LotID"],
+        name: "Lot ID",
+        placeholder: "example: 10083",
+      },
+      {
+        layer: structureLayer,
+        searchFields: ["StrucID"],
+        displayField: "StrucID",
+        exactMatch: false,
+        outFields: ["StrucID"],
+        name: "Structure ID",
+        placeholder: "example: NSRP-01-02-ML007",
+      },
+      {
+        layer: pierAccessLayer,
+        searchFields: ["PierNumber"],
+        displayField: "PierNumber",
+        exactMatch: false,
+        outFields: ["PierNumber"],
+        name: "Pier No",
+        zoomScale: 1000,
+        placeholder: "example: P-288",
+      },
+    ];
+    arcgisSearch.allPlaceholder = "LotID, StructureID, Chainage";
+    arcgisSearch.includeDefaultSourcesDisabled = true;
+    arcgisSearch.locationDisabled = true;
+    arcgisScene.view.ui.components = [];
   });
 
   return (
