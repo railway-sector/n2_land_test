@@ -16,7 +16,7 @@ import Header from "./components/Header";
 import MainChart from "./components/MainChart";
 import ActionPanel from "./components/ActionPanel";
 import { MyContext } from "./contexts/MyContext";
-import { latest_date_field, superurgent_items } from "./uniqueValues";
+import { superurgent_items } from "./uniqueValues";
 
 function App() {
   const [loggedInState, setLoggedInState] = useState<boolean>(false);
@@ -52,13 +52,15 @@ function App() {
 
   const [municipals, setMunicipals] = useState<any>();
   const [barangays, setBarangays] = useState<any>();
-  const [statusdatefield, setStatusdatefield] =
-    useState<any>(latest_date_field);
+  const [statusdatefield, setStatusdatefield] = useState<any>();
   const [superurgenttype, setSuperurgenttype] = useState<any>(
     superurgent_items[0],
   );
   const [datefields, setDatefields] = useState<any>();
   const [timesliderstate, setTimesliderstate] = useState<boolean>(false);
+  const [asofdate, setAsofdate] = useState<any>();
+  const [latestasofdate, setLatestasofdate] = useState<any>();
+  const [dateforhandedover, setDateforhandedover] = useState<any>();
 
   const updateMunicipals = (newMunicipal: any) => {
     setMunicipals(newMunicipal);
@@ -84,6 +86,18 @@ function App() {
     setTimesliderstate(newState);
   };
 
+  const updateAsofdate = (newAsofdate: any) => {
+    setAsofdate(newAsofdate);
+  };
+
+  const updateLatestasofdate = (newAsofdate: any) => {
+    setLatestasofdate(newAsofdate);
+  };
+
+  const updateDateforhandedover = (newDate: any) => {
+    setDateforhandedover(newDate);
+  };
+
   return (
     <>
       {loggedInState === true ? (
@@ -99,12 +113,18 @@ function App() {
                 superurgenttype,
                 datefields,
                 timesliderstate,
+                asofdate,
+                latestasofdate,
+                dateforhandedover,
                 updateMunicipals,
                 updateBarangays,
                 updateStatusdatefield,
                 updateSuperurgenttype,
                 updateDatefields,
                 updateTimesliderstate,
+                updateAsofdate,
+                updateLatestasofdate,
+                updateDateforhandedover,
               }}
             >
               <ActionPanel />

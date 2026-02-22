@@ -65,26 +65,28 @@ const LotChart = () => {
   const {
     municipals,
     barangays,
+    updateStatusdatefield,
     statusdatefield,
     superurgenttype,
     updateSuperurgenttype,
     timesliderstate,
+    updateAsofdate,
+    asofdate,
+    updateLatestasofdate,
+    updateDateforhandedover,
+    dateforhandedover,
+    datefields,
   } = use(MyContext);
 
   // 0. Updated date
-  const [asOfDate, setAsOfDate] = useState(null);
   const [daysPass, setDaysPass] = useState(false);
   useEffect(() => {
     dateUpdate(updatedDateCategoryNames[0]).then((response) => {
-      setAsOfDate(response[0][0]);
+      updateAsofdate(response[0][0]);
+      updateLatestasofdate(response[0][0]);
       setDaysPass(response[0][1] >= cutoff_days ? true : false);
     });
   }, []);
-
-  // Add zoomToLayer in App component, not LotChart component
-  // useEffect(() => {
-  //   zoomToLayer(lotLayer, arcgisScene);
-  // }, [municipals, barangays]);
 
   // 1. Land Acquisition
   const pieSeriesRef = useRef({});
@@ -168,11 +170,15 @@ const LotChart = () => {
     });
 
     // Handed Over
-    generateHandedOverLotsNumber(superurgenttype, municipals, barangays).then(
-      (response) => {
-        setHandedOverNumber(response);
-      },
-    );
+    generateHandedOverLotsNumber(
+      superurgenttype,
+      municipals,
+      barangays,
+      // dateforhandedover,
+      undefined,
+    ).then((response) => {
+      setHandedOverNumber(response);
+    });
 
     generateHandedOverArea(superurgenttype, municipals, barangays).then(
       (response) => {
@@ -572,7 +578,7 @@ const LotChart = () => {
           marginTop: "5px",
         }}
       >
-        {!asOfDate ? "" : "As of " + asOfDate}
+        {!asofdate ? "" : "As of " + asofdate}
       </div>
 
       {/* Lot Chart */}

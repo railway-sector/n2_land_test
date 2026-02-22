@@ -113,8 +113,8 @@ export function queryLayersExpression(
 
   if (!timesliderstate) {
     zoomToLayer(lotLayer, arcgisScene);
+    zoomToLayer(structureLayer, arcgisScene);
   }
-  zoomToLayer(structureLayer, arcgisScene);
 }
 
 export function queryStatisticsLayer(
@@ -213,8 +213,8 @@ export async function dateUpdate(category: any) {
       const year = date.getFullYear();
       const month = monthList[date.getMonth()];
       const day = date.getDate();
-      const final = year < 1990 ? "" : `${month} ${day}, ${year}`;
-      return [final, days_passed];
+      const as_of_date = year < 1990 ? "" : `${month} ${day}, ${year}`;
+      return [as_of_date, days_passed];
     });
     return dates;
   });
@@ -417,13 +417,20 @@ export async function generateHandedOverLotsNumber(
   superurgent: any,
   municipal: any,
   barangay: any,
+  dateforhandedover: any,
 ) {
+  // console.log(dateforhandedover);
+  // const handedOverQuery = dateforhandedover
+  //   ? `${lotHandedOverDateField} <= date '${dateforhandedover}'`
+  //   : `${handedOverLotField} IS NOT NULL`; // this means use all observations as the latest date
+  console.log(dateforhandedover);
   const queryField = `${handedOverLotField} IS NOT NULL`;
-  const onStatisticsFieldValue: string =
+
+  const statisticsQuery: string =
     "CASE WHEN " + handedOverLotField + " = 1 THEN 1 ELSE 0 END";
 
   const total_handedover_lot = new StatisticDefinition({
-    onStatisticField: onStatisticsFieldValue,
+    onStatisticField: statisticsQuery,
     outStatisticFieldName: "total_handedover_lot",
     statisticType: "sum",
   });

@@ -47,7 +47,6 @@ import {
   nloStatusField,
   nloLoStatusField,
   occupancyField,
-  latest_date_field,
 } from "./uniqueValues";
 
 /* Standalone table for Dates */
@@ -393,7 +392,7 @@ export const lotLayerRendererUniqueValueInfos = statusLotLabel.map(
 );
 
 export const lotLayerRenderer = new UniqueValueRenderer({
-  field: latest_date_field,
+  field: undefined,
   defaultSymbol: lotDefaultSymbol, // autocasts as new SimpleFillSymbol()
   uniqueValueInfos: lotLayerRendererUniqueValueInfos,
 });
@@ -464,7 +463,7 @@ export const lotLayer = new FeatureLayer({
     },
   },
   labelingInfo: [lotIdLabel],
-  renderer: lotLayerRenderer,
+  // renderer: lotLayerRenderer,
   popupTemplate: templateLot,
   title: "Land Acquisition",
   minScale: 150000,

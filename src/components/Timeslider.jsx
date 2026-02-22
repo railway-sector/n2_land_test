@@ -19,6 +19,9 @@ export default function Timeslider() {
     updateStatusdatefield,
     datefields,
     updateTimesliderstate,
+    updateAsofdate,
+    updateLatestasofdate,
+    updateDateforhandedover,
   } = use(MyContext);
   const arcgisScene = document.querySelector("arcgis-scene");
   // const timeSlider = document.querySelector("arcgis-time-slider");
@@ -59,7 +62,18 @@ export default function Timeslider() {
           if (timeExtent) {
             const year = timeExtent.end.getFullYear();
             const month = timeExtent.end.getMonth() + 1;
-            // const day = timeExtent.end.getDate();
+            const day = timeExtent.end.getDate();
+
+            // for 'As of' date in chart panel
+            const c_month = timeExtent.end.toLocaleString("en-US", {
+              month: "long",
+            });
+            updateAsofdate(`${c_month} ${day}, ${year}`);
+
+            // Date for filtering handed-over lots number
+            updateDateforhandedover(`${year}-${month}-${day}`);
+
+            //
             const new_date_field =
               month <= 9 ? `x${year}0${month}` : `x${year}${month}`;
 

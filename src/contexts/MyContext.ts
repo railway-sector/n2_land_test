@@ -7,12 +7,18 @@ type MyDropdownContextType = {
   superurgenttype: any;
   datefields: any;
   timesliderstate: any;
+  asofdate: any;
+  latestasofdate: any;
+  dateforhandedover: any;
   updateMunicipals: any;
   updateBarangays: any;
   updateStatusdatefield: any;
   updateSuperurgenttype: any;
   updateDatefields: any;
   updateTimesliderstate: any;
+  updateAsofdate: any;
+  updateLatestasofdate: any;
+  updateDateforhandedover: any;
 };
 
 const initialState = {
@@ -22,12 +28,18 @@ const initialState = {
   superurgenttype: undefined,
   datefields: undefined,
   timesliderstate: undefined,
+  asofdate: undefined,
+  latestasofdate: undefined,
+  dateforhandedover: undefined,
   updateMunicipals: undefined,
   updateBarangays: undefined,
   updateStatusdatefield: undefined,
   updateSuperurgenttype: undefined,
   updateDatefields: undefined,
   updateTimesliderstate: undefined,
+  updateAsofdate: undefined,
+  updateLatestasofdate: undefined,
+  updateDateforhandedover: undefined,
 };
 
 export const MyContext = createContext<MyDropdownContextType>({

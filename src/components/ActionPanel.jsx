@@ -14,7 +14,7 @@ import "@arcgis/map-components/components/arcgis-basemap-gallery";
 import "@arcgis/map-components/components/arcgis-layer-list";
 import "@arcgis/map-components/components/arcgis-legend";
 import "@arcgis/map-components/components/arcgis-direct-line-measurement-3d";
-import { defineActions, latest_date_field } from "../uniqueValues";
+import { defineActions } from "../uniqueValues";
 import {
   ngcp_tagged_structureLayer,
   ngcp_working_area,
@@ -26,7 +26,13 @@ import Timeslider from "./Timeslider";
 import { updateLotSymbology } from "../Query";
 
 function ActionPanel() {
-  const { updateStatusdatefield, updateTimesliderstate } = use(MyContext);
+  const {
+    updateStatusdatefield,
+    updateTimesliderstate,
+    latestasofdate,
+    updateAsofdate,
+    datefields,
+  } = use(MyContext);
   const [activeWidget, setActiveWidget] = useState(null);
   const [nextWidget, setNextWidget] = useState(null);
   const arcgisScene = document.querySelector("arcgis-scene");
@@ -47,8 +53,9 @@ function ActionPanel() {
 
       if (timeSlider) {
         timeSlider.timeExtent = null;
-        updateStatusdatefield(latest_date_field);
-        updateLotSymbology(latest_date_field);
+        updateAsofdate(latestasofdate);
+        updateStatusdatefield(datefields[datefields.length - 1]);
+        updateLotSymbology(datefields[datefields.length - 1]);
         updateTimesliderstate(false);
       }
     }
