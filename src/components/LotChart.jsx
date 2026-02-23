@@ -130,6 +130,7 @@ const LotChart = () => {
       arcgisScene,
       timesliderstate,
     );
+
     generateLotData(
       superurgenttype,
       municipals,
@@ -174,8 +175,7 @@ const LotChart = () => {
       superurgenttype,
       municipals,
       barangays,
-      // dateforhandedover,
-      undefined,
+      dateforhandedover,
     ).then((response) => {
       setHandedOverNumber(response);
     });
@@ -185,7 +185,13 @@ const LotChart = () => {
         setHandedOverArea(response);
       },
     );
-  }, [superurgenttype, municipals, barangays, statusdatefield]);
+  }, [
+    superurgenttype,
+    municipals,
+    barangays,
+    statusdatefield,
+    dateforhandedover,
+  ]);
 
   // useLayoutEffect runs synchronously. If this is used with React.lazy,
   // Every time calcite action is fired, the chart is fired, too.

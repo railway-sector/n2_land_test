@@ -474,25 +474,6 @@ export const lotLayer = new FeatureLayer({
   },
 });
 
-// export const lotLayer = new FeatureLayer({
-//   portalItem: {
-//     id: "958407ebe764470793af4141081f1944",
-//     portal: {
-//       url: "https://gis.railway-sector.com/portal",
-//     },
-//   },
-//   labelingInfo: [lotIdLabel],
-//   renderer: lotLayerRenderer,
-//   popupTemplate: templateLot,
-//   title: "Land Acquisition",
-//   minScale: 150000,
-//   maxScale: 0,
-//   //labelsVisible: false,
-//   elevationInfo: {
-//     mode: "on-the-ground",
-//   },
-// });
-
 /* Endorsed Lot Layer */
 // Endorsed lot layer
 const endorsedLayerRendererUniqueValueInfos = statusLotEndorsedLabel.map(
