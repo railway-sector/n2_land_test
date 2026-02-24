@@ -1,0 +1,1 @@
+import{g as r}from"./euclideanLengthMeasurementUtils-BjfuKsqh.js";import{c as o}from"./SnappingManager-BTBCDC3_.js";import{n as s}from"./PointSnappingHint-Kptc_F1S.js";class m extends o{constructor(t){super({...t,constraint:new r(t.targetPoint)})}get hints(){return[new s(this.targetPoint,this.isDraped,this.domain)]}}export{m as r};
