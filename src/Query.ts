@@ -295,13 +295,13 @@ export async function generateLotNumber(
   superurgent: any,
   municipal: any,
   barangay: any,
-  statusdatefield: any,
+  handedoverDatefield: any,
 ) {
   try {
     const queryField = `${lotIdField} IS NOT NULL`;
 
     const onStatisticsFieldValue: string =
-      "CASE WHEN " + statusdatefield + " >= 1 THEN 1 ELSE 0 END";
+      "CASE WHEN " + handedoverDatefield + " >= 1 THEN 1 ELSE 0 END";
 
     const total_lot_number = new StatisticDefinition({
       onStatisticField: lotIdField,
@@ -316,7 +316,7 @@ export async function generateLotNumber(
     });
 
     const query = lotLayer.createQuery();
-    query.outFields = [lotIdField, statusdatefield];
+    query.outFields = [lotIdField, handedoverDatefield];
     query.outStatistics = [total_lot_number, total_lot_pie];
     query.where = queryStatisticsLayer(
       superurgent,
@@ -347,13 +347,13 @@ export async function generateTotalAffectedArea(
   superurgent: any,
   municipal: any,
   barangay: any,
-  statusdatefield: any,
+  handedoverAreafield: any,
 ) {
   try {
     const queryField =
       `${affectedAreaField} IS NOT NULL` +
       " AND " +
-      `${statusdatefield} IS NOT NULL`;
+      `${handedoverAreafield} IS NOT NULL`;
 
     const total_affected_area = new StatisticDefinition({
       onStatisticField: affectedAreaField,
@@ -362,7 +362,7 @@ export async function generateTotalAffectedArea(
     });
 
     const query = lotLayer.createQuery();
-    query.outFields = [affectedAreaField, statusdatefield];
+    query.outFields = [affectedAreaField, handedoverAreafield];
     query.outStatistics = [total_affected_area];
     query.where = queryStatisticsLayer(
       superurgent,

@@ -18,10 +18,13 @@ export default function Timeslider() {
     barangays,
     updateStatusdatefield,
     datefields,
+    latestasofdate,
     updateTimesliderstate,
     updateAsofdate,
     updateLatestasofdate,
     updateDateforhandedover,
+    updateHandedoverDatefield,
+    updateHandedoverAreafield,
   } = use(MyContext);
   const arcgisScene = document.querySelector("arcgis-scene");
   // const timeSlider = document.querySelector("arcgis-time-slider");
@@ -29,6 +32,8 @@ export default function Timeslider() {
   arcgisScene?.viewOnReady(() => {
     // arcgisScene?.whenLayerView(lotLayer).then((layerView) => {
     const timeSlider = document.querySelector("arcgis-time-slider");
+
+    console.log(latestasofdate);
 
     const dateCollect = [];
     datefields.map((date, index) => {
@@ -73,12 +78,21 @@ export default function Timeslider() {
           // Date for filtering handed-over lots number
           updateDateforhandedover(`${year}-${month}-${day}`);
 
-          //
+          // Updating status field:
           const new_date_field =
             month <= 9 ? `x${year}0${month}` : `x${year}${month}`;
-
           updateLotSymbology(new_date_field);
           updateStatusdatefield(new_date_field);
+
+          // Updating Handed-over field:
+          const new_handedover_field =
+            month <= 9 ? `x${year}0${month}_HO` : `x${year}${month}_HO`;
+          updateHandedoverDatefield(new_handedover_field);
+
+          // Updating Handed-Over Area field:
+          const new_handedoverarea_field =
+            month <= 9 ? `x${year}0${month}_HOA` : `x${year}${month}_HOA`;
+          updateHandedoverAreafield(new_handedoverarea_field);
         }
       },
     );

@@ -61,6 +61,8 @@ function App() {
   const [asofdate, setAsofdate] = useState<any>();
   const [latestasofdate, setLatestasofdate] = useState<any>();
   const [dateforhandedover, setDateforhandedover] = useState<any>();
+  const [handedoverDatefield, setHandedoverDatefield] = useState<any>();
+  const [handedoverAreafield, setHandedoverAreafield] = useState<any>();
 
   const updateMunicipals = (newMunicipal: any) => {
     setMunicipals(newMunicipal);
@@ -98,6 +100,14 @@ function App() {
     setDateforhandedover(newDate);
   };
 
+  const updateHandedoverDatefield = (newDatefield: any) => {
+    setHandedoverDatefield(newDatefield);
+  };
+
+  const updateHandedoverAreafield = (newAreafield: any) => {
+    setHandedoverAreafield(newAreafield);
+  };
+
   return (
     <>
       {loggedInState === true ? (
@@ -116,6 +126,8 @@ function App() {
                 asofdate,
                 latestasofdate,
                 dateforhandedover,
+                handedoverDatefield,
+                handedoverAreafield,
                 updateMunicipals,
                 updateBarangays,
                 updateStatusdatefield,
@@ -125,6 +137,8 @@ function App() {
                 updateAsofdate,
                 updateLatestasofdate,
                 updateDateforhandedover,
+                updateHandedoverDatefield,
+                updateHandedoverAreafield,
               }}
             >
               <ActionPanel />
