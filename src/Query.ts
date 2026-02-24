@@ -189,21 +189,6 @@ export function lastDateOfMonth(date: Date) {
 
 // Updat date
 export async function dateUpdate(category: any) {
-  const monthList = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
   const query = dateTable.createQuery();
   const queryExpression =
     "project = 'N2'" + " AND " + "category = '" + category + "'";
@@ -221,10 +206,12 @@ export async function dateUpdate(category: any) {
       const days_passed = Math.round(time_passed / (1000 * 3600 * 24));
 
       const year = date.getFullYear();
-      const month = monthList[date.getMonth()];
+      const month = date.toLocaleString("en-US", {
+        month: "long",
+      });
       const day = date.getDate();
       const as_of_date = year < 1990 ? "" : `${month} ${day}, ${year}`;
-      return [as_of_date, days_passed];
+      return [as_of_date, days_passed, date];
     });
     return dates;
   });

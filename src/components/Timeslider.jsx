@@ -33,8 +33,6 @@ export default function Timeslider() {
     // arcgisScene?.whenLayerView(lotLayer).then((layerView) => {
     const timeSlider = document.querySelector("arcgis-time-slider");
 
-    console.log(latestasofdate);
-
     const dateCollect = [];
     datefields.map((date, index) => {
       const yyyy = Number(date.slice(1, 5));
@@ -45,9 +43,12 @@ export default function Timeslider() {
       dateCollect.push(final);
     });
 
+    const updatedDateCollect = [...dateCollect.slice(0, -1), latestasofdate];
+
     timeSlider.fullTimeExtent = {
       start: dateCollect[0],
-      end: dateCollect[dateCollect.length - 1],
+      // end: dateCollect[dateCollect.length - 1].push(latestasofdate),
+      end: latestasofdate,
     };
 
     // timeSlider.stops = {
@@ -58,7 +59,7 @@ export default function Timeslider() {
     // };
 
     timeSlider.stops = {
-      dates: dateCollect,
+      dates: updatedDateCollect,
     };
 
     reactiveUtils.watch(
@@ -78,20 +79,22 @@ export default function Timeslider() {
           // Date for filtering handed-over lots number
           updateDateforhandedover(`${year}-${month}-${day}`);
 
+          const yyyy0m = `x${year}0${month}`;
+          const yyyymm = `x${year}${month}`;
+
           // Updating status field:
-          const new_date_field =
-            month <= 9 ? `x${year}0${month}` : `x${year}${month}`;
+          const new_date_field = month <= 9 ? yyyy0m : yyyymm;
           updateLotSymbology(new_date_field);
           updateStatusdatefield(new_date_field);
 
           // Updating Handed-over field:
           const new_handedover_field =
-            month <= 9 ? `x${year}0${month}_HO` : `x${year}${month}_HO`;
+            month <= 9 ? `${yyyy0m}_HO` : `${yyyymm}_HO`;
           updateHandedoverDatefield(new_handedover_field);
 
           // Updating Handed-Over Area field:
           const new_handedoverarea_field =
-            month <= 9 ? `x${year}0${month}_HOA` : `x${year}${month}_HOA`;
+            month <= 9 ? `${yyyy0m}_HOA` : `${yyyymm}_HOA`;
           updateHandedoverAreafield(new_handedoverarea_field);
         }
       },

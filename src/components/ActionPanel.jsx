@@ -53,7 +53,13 @@ function ActionPanel() {
 
       if (timeSlider) {
         timeSlider.timeExtent = null;
-        updateAsofdate(latestasofdate);
+
+        const year = latestasofdate.getFullYear();
+        const month = latestasofdate.toLocaleString("en-US", {
+          month: "long",
+        });
+        const day = latestasofdate.getDate();
+        updateAsofdate(`${month} ${day}, ${year}`);
         updateStatusdatefield(datefields[datefields.length - 1]);
         updateLotSymbology(datefields[datefields.length - 1]);
         updateTimesliderstate(false);

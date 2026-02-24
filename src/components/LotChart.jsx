@@ -85,7 +85,7 @@ const LotChart = () => {
   useEffect(() => {
     dateUpdate(updatedDateCategoryNames[0]).then((response) => {
       updateAsofdate(response[0][0]);
-      updateLatestasofdate(response[0][0]);
+      updateLatestasofdate(response[0][2]);
       setDaysPass(response[0][1] >= cutoff_days ? true : false);
     });
   }, []);
