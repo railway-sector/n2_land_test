@@ -28,8 +28,13 @@ import "@esri/calcite-components/dist/components/calcite-button";
 import { MyContext } from "../contexts/MyContext";
 
 function MapDisplay() {
-  const { updateDatefields, updateStatusdatefield, updateDateforhandedover } =
-    use(MyContext);
+  const {
+    updateDatefields,
+    updateStatusdatefield,
+    updateDateforhandedover,
+    asofdate,
+    updateHandedoverAreafield,
+  } = use(MyContext);
   const [sceneView, setSceneView] = useState();
   const arcgisScene = document.querySelector("arcgis-scene");
   const arcgisSearch = document.querySelector("arcgis-search");
@@ -42,16 +47,30 @@ function MapDisplay() {
         all_fields.push(field.name);
       });
 
-      const date_fields = all_fields.filter((field) => field.startsWith("x"));
-      const latest_date = date_fields[date_fields.length - 1]; // E.g., "x202601"
+      const date_fields = all_fields.filter(
+        (field) => field.startsWith("x") && !isNaN(field.slice(1)),
+      );
+      // Re-order date fields in ascending order
+      date_fields.sort((a, b) => {
+        const a_date = new Date(
+          Number(a.slice(1, 5)),
+          Number(a.slice(5, 7)) - 1,
+        );
+        const b_date = new Date(
+          Number(b.slice(1, 5)),
+          Number(b.slice(5, 7)) - 1,
+        );
+        return a_date - b_date;
+      });
+
+      // console.log(date_fields);
+      const latest_date = date_fields[date_fields.length - 1]; // E.g., "x202602"
       const yyyy = Number(latest_date.slice(1, 5));
       const mm = Number(latest_date.slice(5, 7));
-      const dd = new Date(yyyy, mm, 0).getDate();
 
-      //
       updateDatefields(date_fields);
       updateStatusdatefield(latest_date);
-      updateDateforhandedover(`${yyyy}-${mm}-${dd}`);
+      updateHandedoverAreafield(`${latest_date}_HOA`);
 
       // Default lot layer renderer
       lotLayerRenderer.field = latest_date;

@@ -427,25 +427,16 @@ export async function generateAffectedAreaForPie(
 
 // Handed Over
 export async function generateHandedOverLotsNumber(
-  superurgent: any,
-  municipal: any,
-  barangay: any,
+  // superurgent: any,
+  // municipal: any,
+  // barangay: any,
   dateforhandedover: any,
 ) {
   try {
-    const handedOverQuery = dateforhandedover
-      ? `${lotHandedOverDateField} <= date '${dateforhandedover}'`
-      : `${handedOverLotField} IS NOT NULL`; // this means use all observations as the latest date
-
-    const queryField = !dateforhandedover
-      ? `${handedOverLotField} IS NOT NULL`
-      : handedOverQuery;
-
-    const statisticsQuery: string =
-      "CASE WHEN " + handedOverLotField + " = 1 THEN 1 ELSE 0 END";
+    const onStatisticsFieldValue = `CASE WHEN ${lotHandedOverDateField} <= date '${dateforhandedover}' THEN 1 ELSE 0 END`;
 
     const total_handedover_lot = new StatisticDefinition({
-      onStatisticField: statisticsQuery,
+      onStatisticField: onStatisticsFieldValue,
       outStatisticFieldName: "total_handedover_lot",
       statisticType: "sum",
     });
@@ -458,18 +449,20 @@ export async function generateHandedOverLotsNumber(
 
     const query = lotLayer.createQuery();
     query.outStatistics = [total_handedover_lot, total_lot_N];
-    query.where = queryStatisticsLayer(
-      superurgent,
-      municipal,
-      barangay,
-      queryField,
-    );
+    query.outFields = [lotIdField, lotHandedOverDateField];
+    // query.where = queryStatisticsLayer(
+    //   superurgent,
+    //   municipal,
+    //   barangay,
+    //   undefined,
+    // );
 
     return lotLayer.queryFeatures(query).then((response: any) => {
       const stats = response.features[0].attributes;
       const handedover = stats.total_handedover_lot;
       const totaln = stats.total_lot_N;
       const percent = ((handedover / totaln) * 100).toFixed(0);
+
       return [percent, handedover];
     });
   } catch (error) {
@@ -478,31 +471,33 @@ export async function generateHandedOverLotsNumber(
 }
 
 export async function generateHandedOverArea(
-  superurgent: any,
-  municipal: any,
-  barangay: any,
+  // superurgent: any,
+  // municipal: any,
+  // barangay: any,
+  handedoverAreafield: any,
 ) {
   try {
-    const queryField = `${lotHandedOverAreaField} IS NOT NULL`;
+    // console.log(handedoverAreafield);
 
     const handed_over_area = new StatisticDefinition({
-      onStatisticField: lotHandedOverAreaField,
+      onStatisticField: handedoverAreafield,
       outStatisticFieldName: "handed_over_area",
       statisticType: "sum",
     });
 
     const query = lotLayer.createQuery();
     query.outStatistics = [handed_over_area];
-    query.where = queryStatisticsLayer(
-      superurgent,
-      municipal,
-      barangay,
-      queryField,
-    );
+    // query.where = queryStatisticsLayer(
+    //   superurgent,
+    //   municipal,
+    //   barangay,
+    //   undefined,
+    // );
 
     return lotLayer.queryFeatures(query).then((response: any) => {
       const stats = response.features[0].attributes;
       const value = stats.handed_over_area;
+      console.log(value);
       return value;
     });
   } catch (error) {

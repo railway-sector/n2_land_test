@@ -84,8 +84,17 @@ const LotChart = () => {
   const [daysPass, setDaysPass] = useState(false);
   useEffect(() => {
     dateUpdate(updatedDateCategoryNames[0]).then((response) => {
+      // Default as of date:
       updateAsofdate(response[0][0]);
-      updateLatestasofdate(response[0][2]);
+
+      // Default latest date for handed over
+      const latest_date = response[0][2];
+      updateLatestasofdate(latest_date);
+      updateDateforhandedover(
+        `${latest_date.getFullYear()}-${latest_date.getMonth() + 1}-${latest_date.getDate()}`,
+      );
+
+      // For calculating the number of days passed since the latest date
       setDaysPass(response[0][1] >= cutoff_days ? true : false);
     });
   }, []);
@@ -182,11 +191,14 @@ const LotChart = () => {
       setHandedOverNumber(response);
     });
 
-    generateHandedOverArea(superurgenttype, municipals, barangays).then(
-      (response) => {
-        setHandedOverArea(response);
-      },
-    );
+    generateHandedOverArea(
+      superurgenttype,
+      municipals,
+      barangays,
+      handedoverAreafield,
+    ).then((response) => {
+      setHandedOverArea(response);
+    });
   }, [
     superurgenttype,
     municipals,

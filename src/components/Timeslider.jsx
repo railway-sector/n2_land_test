@@ -87,11 +87,6 @@ export default function Timeslider() {
           updateLotSymbology(new_date_field);
           updateStatusdatefield(new_date_field);
 
-          // Updating Handed-over field:
-          const new_handedover_field =
-            month <= 9 ? `${yyyy0m}_HO` : `${yyyymm}_HO`;
-          updateHandedoverDatefield(new_handedover_field);
-
           // Updating Handed-Over Area field:
           const new_handedoverarea_field =
             month <= 9 ? `${yyyy0m}_HOA` : `${yyyymm}_HOA`;
