@@ -492,7 +492,7 @@ const LotChart = () => {
           marginLeft: "15px",
           marginRight: "15px",
           justifyContent: "space-between",
-          marginBottom: "10px",
+          marginBottom: "5px",
         }}
       >
         <img
@@ -609,7 +609,7 @@ const LotChart = () => {
           height: "57vh",
           backgroundColor: "rgb(0,0,0,0)",
           color: "white",
-          marginBottom: "3%",
+          marginBottom: "1%",
         }}
       ></div>
 
@@ -683,7 +683,6 @@ const LotChart = () => {
           </dd>
         </dl>
       </div>
-      {municipals}
     </>
   );
 }; // End of lotChartgs

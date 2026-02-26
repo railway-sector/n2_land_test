@@ -3,6 +3,7 @@ import ActionButton from "@arcgis/core/support/actions/ActionButton";
 
 // Chart width
 export const chart_width = "26vw";
+export const chart_box_width = 250;
 
 // Pier Workable properties
 export const color_workable = "#38A800";

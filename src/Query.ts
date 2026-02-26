@@ -127,22 +127,33 @@ export function queryStatisticsLayer(
 ) {
   try {
     const typeExpression = queryDropdownTypes(municipal, barangay);
+
     let queryWhere: any;
     if (superurgent === superurgent_items[0]) {
       if (!municipal) {
-        queryWhere = queryField;
+        queryWhere = !queryField ? "1=1" : queryField;
       } else if (municipal && !barangay) {
-        queryWhere = queryField + " AND " + typeExpression[0];
+        queryWhere = !queryField
+          ? typeExpression[0]
+          : queryField + " AND " + typeExpression[0];
       } else if (municipal && barangay) {
-        queryWhere = queryField + " AND " + typeExpression[1];
+        queryWhere = !queryField
+          ? typeExpression[1]
+          : queryField + " AND " + typeExpression[1];
       }
     } else if (superurgent === superurgent_items[1]) {
       if (!municipal) {
-        queryWhere = queryField + " AND " + querySuperUrgent;
+        queryWhere = !queryField
+          ? querySuperUrgent
+          : queryField + " AND " + querySuperUrgent;
       } else if (municipal && !barangay) {
-        queryWhere = queryField + " AND " + typeExpression[2];
+        queryWhere = !queryField
+          ? typeExpression[2]
+          : queryField + " AND " + typeExpression[2];
       } else if (municipal && barangay) {
-        queryWhere = queryField + " AND " + typeExpression[3];
+        queryWhere = !queryField
+          ? typeExpression[3]
+          : queryField + " AND " + typeExpression[3];
       }
 
       // Structure and NLO
@@ -427,11 +438,12 @@ export async function generateAffectedAreaForPie(
 
 // Handed Over
 export async function generateHandedOverLotsNumber(
-  // superurgent: any,
-  // municipal: any,
-  // barangay: any,
+  superurgent: any,
+  municipal: any,
+  barangay: any,
   dateforhandedover: any,
 ) {
+  console.log(superurgent, municipal, barangay, dateforhandedover);
   try {
     const onStatisticsFieldValue = `CASE WHEN ${lotHandedOverDateField} <= date '${dateforhandedover}' THEN 1 ELSE 0 END`;
 
@@ -450,12 +462,16 @@ export async function generateHandedOverLotsNumber(
     const query = lotLayer.createQuery();
     query.outStatistics = [total_handedover_lot, total_lot_N];
     query.outFields = [lotIdField, lotHandedOverDateField];
-    // query.where = queryStatisticsLayer(
-    //   superurgent,
-    //   municipal,
-    //   barangay,
-    //   undefined,
-    // );
+    query.where = queryStatisticsLayer(
+      superurgent,
+      municipal,
+      barangay,
+      undefined,
+    );
+
+    console.log(
+      queryStatisticsLayer(superurgent, municipal, barangay, undefined),
+    );
 
     return lotLayer.queryFeatures(query).then((response: any) => {
       const stats = response.features[0].attributes;
@@ -471,9 +487,9 @@ export async function generateHandedOverLotsNumber(
 }
 
 export async function generateHandedOverArea(
-  // superurgent: any,
-  // municipal: any,
-  // barangay: any,
+  superurgent: any,
+  municipal: any,
+  barangay: any,
   handedoverAreafield: any,
 ) {
   try {
@@ -487,12 +503,12 @@ export async function generateHandedOverArea(
 
     const query = lotLayer.createQuery();
     query.outStatistics = [handed_over_area];
-    // query.where = queryStatisticsLayer(
-    //   superurgent,
-    //   municipal,
-    //   barangay,
-    //   undefined,
-    // );
+    query.where = queryStatisticsLayer(
+      superurgent,
+      municipal,
+      barangay,
+      undefined,
+    );
 
     return lotLayer.queryFeatures(query).then((response: any) => {
       const stats = response.features[0].attributes;
