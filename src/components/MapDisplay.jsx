@@ -34,6 +34,7 @@ function MapDisplay() {
     updateDateforhandedover,
     asofdate,
     updateHandedoverAreafield,
+    updateAffectedAreafield,
   } = use(MyContext);
   const [sceneView, setSceneView] = useState();
   const arcgisScene = document.querySelector("arcgis-scene");
@@ -71,6 +72,7 @@ function MapDisplay() {
       updateDatefields(date_fields);
       updateStatusdatefield(latest_date);
       updateHandedoverAreafield(`${latest_date}_HOA`);
+      updateAffectedAreafield(`${latest_date}_TAA`);
 
       // Default lot layer renderer
       lotLayerRenderer.field = latest_date;

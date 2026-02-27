@@ -12,6 +12,7 @@ type MyDropdownContextType = {
   dateforhandedover: any;
   handedoverDatefield: any;
   handedoverAreafield: any;
+  affectedAreafield: any;
   updateMunicipals: any;
   updateBarangays: any;
   updateStatusdatefield: any;
@@ -23,6 +24,7 @@ type MyDropdownContextType = {
   updateDateforhandedover: any;
   updateHandedoverDatefield: any;
   updateHandedoverAreafield: any;
+  updateAffectedAreafield: any;
 };
 
 const initialState = {
@@ -37,6 +39,7 @@ const initialState = {
   dateforhandedover: undefined,
   handedoverDatefield: undefined,
   handedoverAreafield: undefined,
+  affectedAreafield: undefined,
   updateMunicipals: undefined,
   updateBarangays: undefined,
   updateStatusdatefield: undefined,
@@ -48,6 +51,7 @@ const initialState = {
   updateDateforhandedover: undefined,
   updateHandedoverDatefield: undefined,
   updateHandedoverAreafield: undefined,
+  updateAffectedAreafield: undefined,
 };
 
 export const MyContext = createContext<MyDropdownContextType>({

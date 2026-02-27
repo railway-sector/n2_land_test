@@ -345,22 +345,19 @@ export async function generateTotalAffectedArea(
   superurgent: any,
   municipal: any,
   barangay: any,
-  handedoverAreafield: any,
+  affectedAreafield: any,
 ) {
   try {
-    const queryField =
-      `${affectedAreaField} IS NOT NULL` +
-      " AND " +
-      `${handedoverAreafield} IS NOT NULL`;
+    const queryField = `${affectedAreafield} IS NOT NULL`;
 
     const total_affected_area = new StatisticDefinition({
-      onStatisticField: affectedAreaField,
+      onStatisticField: affectedAreafield,
       outStatisticFieldName: "total_affected_area",
       statisticType: "sum",
     });
 
     const query = lotLayer.createQuery();
-    query.outFields = [affectedAreaField, handedoverAreafield];
+    query.outFields = [affectedAreafield];
     query.outStatistics = [total_affected_area];
     query.where = queryStatisticsLayer(
       superurgent,
@@ -384,10 +381,13 @@ export async function generateAffectedAreaForPie(
   municipal: any,
   barangay: any,
   statusdatefield: any,
+  affectedAreafield: any,
 ) {
   try {
+    console.log(statusdatefield);
+    console.log(affectedAreafield);
     const statusQuery =
-      `${statusdatefield} IS NOT NULL` + " AND " + `${statusdatefield} >= 1`;
+      `${affectedAreafield} IS NOT NULL` + " AND " + `${statusdatefield} >= 1`;
 
     const total_affected_area = new StatisticDefinition({
       onStatisticField: affectedAreaField,
@@ -513,7 +513,6 @@ export async function generateHandedOverArea(
     return lotLayer.queryFeatures(query).then((response: any) => {
       const stats = response.features[0].attributes;
       const value = stats.handed_over_area;
-      console.log(value);
       return value;
     });
   } catch (error) {

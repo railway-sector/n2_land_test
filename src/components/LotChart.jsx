@@ -78,6 +78,7 @@ const LotChart = () => {
     datefields,
     handedoverDatefield,
     handedoverAreafield,
+    affectedAreafield,
   } = use(MyContext);
 
   // 0. Updated date
@@ -166,7 +167,8 @@ const LotChart = () => {
       superurgenttype,
       municipals,
       barangays,
-      handedoverAreafield,
+      statusdatefield,
+      affectedAreafield,
     ).then((response) => {
       setAffectAreaPie(response);
     });
@@ -176,7 +178,7 @@ const LotChart = () => {
       superurgenttype,
       municipals,
       barangays,
-      statusdatefield,
+      affectedAreafield,
     ).then((response) => {
       setTotalAffectedArea(response);
     });

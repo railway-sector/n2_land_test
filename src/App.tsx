@@ -63,6 +63,7 @@ function App() {
   const [dateforhandedover, setDateforhandedover] = useState<any>();
   const [handedoverDatefield, setHandedoverDatefield] = useState<any>();
   const [handedoverAreafield, setHandedoverAreafield] = useState<any>();
+  const [affectedAreafield, setAffectedAreafield] = useState<any>();
 
   const updateMunicipals = (newMunicipal: any) => {
     setMunicipals(newMunicipal);
@@ -108,6 +109,10 @@ function App() {
     setHandedoverAreafield(newAreafield);
   };
 
+  const updateAffectedAreafield = (newAreafield: any) => {
+    setAffectedAreafield(newAreafield);
+  };
+
   return (
     <>
       {loggedInState === true ? (
@@ -128,6 +133,7 @@ function App() {
                 dateforhandedover,
                 handedoverDatefield,
                 handedoverAreafield,
+                affectedAreafield,
                 updateMunicipals,
                 updateBarangays,
                 updateStatusdatefield,
@@ -139,6 +145,7 @@ function App() {
                 updateDateforhandedover,
                 updateHandedoverDatefield,
                 updateHandedoverAreafield,
+                updateAffectedAreafield,
               }}
             >
               <ActionPanel />
