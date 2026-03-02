@@ -413,6 +413,7 @@ const customContentLot = new CustomContent({
     const endorse = event.graphic.attributes[endorsedField];
     const endorsed = statusLotEndorsedLabel[endorse];
     const remarks = event.graphic.attributes["Remarks"];
+    const note = event.graphic.attributes["note"];
 
     // let daten: any;
     let date: any;
@@ -443,7 +444,8 @@ const customContentLot = new CustomContent({
               <li>Land Owner:       <span style="color: #d9dc00ff; font-weight: bold">${landOwner}</span>
               <li>CP:               <span style="color: #d9dc00ff; font-weight: bold">${cpNo}</span><br>
               <li>Endorsed:         <span style="color: #d9dc00ff; font-weight: bold">${endorsed}</span></li>
-              <li>Acquisition Status: <span style="color: #d9dc00ff; font-weight: bold">${remarks}</span></li></ul>
+              <li>Acquisition Status: <span style="color: #d9dc00ff; font-weight: bold">${remarks}</span></li>
+              <li>Note: <span style="color: #d9dc00ff; font-weight: bold">${note}</span></li></ul>
               </div>
               `;
   },
