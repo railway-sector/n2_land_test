@@ -51,23 +51,26 @@ function MapDisplay() {
       const date_fields = all_fields.filter(
         (field) => field.startsWith("x") && !isNaN(field.slice(1)),
       );
+
       // Re-order date fields in ascending order
       date_fields.sort((a, b) => {
         const a_date = new Date(
           Number(a.slice(1, 5)),
           Number(a.slice(5, 7)) - 1,
+          Number(a.slice(7, 9)),
         );
         const b_date = new Date(
           Number(b.slice(1, 5)),
           Number(b.slice(5, 7)) - 1,
+          Number(b.slice(7, 9)),
         );
         return a_date - b_date;
       });
 
-      // console.log(date_fields);
-      const latest_date = date_fields[date_fields.length - 1]; // E.g., "x202602"
+      const latest_date = date_fields[date_fields.length - 1]; // E.g., "x20260220"
       const yyyy = Number(latest_date.slice(1, 5));
       const mm = Number(latest_date.slice(5, 7));
+      const dd = Number(latest_date.slice(7, 9));
 
       updateDatefields(date_fields);
       updateStatusdatefield(latest_date);

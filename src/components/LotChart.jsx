@@ -461,7 +461,17 @@ const LotChart = () => {
                         ) +
                         " m2" +
                         ")"
-                      : "{value}";
+                      : category === statusLotLabel[7]
+                        ? "{value}[/]" +
+                          " (" +
+                          thousands_separators(
+                            affectAreaPie?.find(
+                              (emp) => emp.category === category,
+                            )?.value,
+                          ) +
+                          " m2" +
+                          ")"
+                        : "{value}";
       }
 
       return text;

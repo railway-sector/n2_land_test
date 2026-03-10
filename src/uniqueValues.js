@@ -50,6 +50,7 @@ export const statusLotLabel = [
   "For Notice of Taking",
   "With PTE",
   "For Expropriation",
+  "Harmonized/Optimized",
 ];
 
 export const statusLotNumber = statusLotLabel.map((stat, index) => {
@@ -68,6 +69,7 @@ export const statusLotColor = [
   "#FF5733",
   "#70AD47",
   "#FF0000",
+  "#B2B2B2",
 ];
 
 export const statusLotQuery = statusLotLabel.map((status, index) => {

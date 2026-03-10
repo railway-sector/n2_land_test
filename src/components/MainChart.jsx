@@ -36,7 +36,7 @@ function MainChart() {
         <CalcitePanel
           scale="s"
           collapsible
-          heading="Progress Summary"
+          heading="Chart"
           headingLevel="h3"
           style={{
             "--calcite-panel-heading-text-color": primaryLabelColor,

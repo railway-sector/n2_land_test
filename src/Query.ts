@@ -384,8 +384,6 @@ export async function generateAffectedAreaForPie(
   affectedAreafield: any,
 ) {
   try {
-    console.log(statusdatefield);
-    console.log(affectedAreafield);
     const statusQuery =
       `${affectedAreafield} IS NOT NULL` + " AND " + `${statusdatefield} >= 1`;
 
@@ -443,7 +441,6 @@ export async function generateHandedOverLotsNumber(
   barangay: any,
   dateforhandedover: any,
 ) {
-  console.log(superurgent, municipal, barangay, dateforhandedover);
   try {
     const onStatisticsFieldValue = `CASE WHEN ${lotHandedOverDateField} <= date '${dateforhandedover}' THEN 1 ELSE 0 END`;
 
@@ -469,10 +466,6 @@ export async function generateHandedOverLotsNumber(
       undefined,
     );
 
-    console.log(
-      queryStatisticsLayer(superurgent, municipal, barangay, undefined),
-    );
-
     return lotLayer.queryFeatures(query).then((response: any) => {
       const stats = response.features[0].attributes;
       const handedover = stats.total_handedover_lot;
@@ -493,8 +486,6 @@ export async function generateHandedOverArea(
   handedoverAreafield: any,
 ) {
   try {
-    // console.log(handedoverAreafield);
-
     const handed_over_area = new StatisticDefinition({
       onStatisticField: handedoverAreafield,
       outStatisticFieldName: "handed_over_area",

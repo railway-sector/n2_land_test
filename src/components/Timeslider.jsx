@@ -34,12 +34,14 @@ export default function Timeslider() {
     // arcgisScene?.whenLayerView(lotLayer).then((layerView) => {
     const timeSlider = document.querySelector("arcgis-time-slider");
 
+    console.log(datefields);
+
     const dateCollect = [];
     datefields.map((date, index) => {
       const yyyy = Number(date.slice(1, 5));
       const desired_mm = Number(date.slice(5, 7));
+      const dd = Number(date.slice(7, 9));
       const mm = desired_mm - 1;
-      const dd = new Date(yyyy, desired_mm, 0).getDate();
       const final = new Date(yyyy, mm, dd);
       dateCollect.push(final);
     });
@@ -59,6 +61,7 @@ export default function Timeslider() {
     //   },
     // };
 
+    console.log(updatedDateCollect);
     timeSlider.stops = {
       dates: updatedDateCollect,
     };
@@ -80,22 +83,23 @@ export default function Timeslider() {
           // Date for filtering handed-over lots number
           updateDateforhandedover(`${year}-${month}-${day}`);
 
-          const yyyy0m = `x${year}0${month}`;
-          const yyyymm = `x${year}${month}`;
+          const yyyy0mdd = `x${year}0${month}${day}`;
+          const yyyymmdd = `x${year}${month}${day}`;
 
           // Updating status field:
-          const new_date_field = month <= 9 ? yyyy0m : yyyymm;
+          const new_date_field = month <= 9 ? yyyy0mdd : yyyymmdd;
+          console.log(new_date_field);
           updateLotSymbology(new_date_field);
           updateStatusdatefield(new_date_field);
 
           // Updating Handed-Over Area field:
           const new_handedoverarea_field =
-            month <= 9 ? `${yyyy0m}_HOA` : `${yyyymm}_HOA`;
+            month <= 9 ? `${yyyy0mdd}_HOA` : `${yyyymmdd}_HOA`;
           updateHandedoverAreafield(new_handedoverarea_field);
 
           // Updating Affected-Area field:
           const new_affectedarea_field =
-            month <= 9 ? `${yyyy0m}_TAA` : `${yyyymm}_TAA`;
+            month <= 9 ? `${yyyy0mdd}_TAA` : `${yyyymmdd}_TAA`;
           updateAffectedAreafield(new_affectedarea_field);
         }
       },
